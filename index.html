@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>شب‌های مافیا — چندگوشی</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+:root{--bg:#0d0f1a;--card:#171a2b;--card2:#1f2337;--acc:#e63946;--acc2:#f4a261;--ok:#2ec4b6;--txt:#eef0ff;--mut:#8f95b5;--mafia:#e63946;--city:#2ec4b6;--neutral:#c77dff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:Vazirmatn,Tahoma,sans-serif;background:radial-gradient(1200px 600px at 50% -10%,#232746,var(--bg));color:var(--txt);min-height:100vh;transition:background .6s}
+body.night{background:radial-gradient(800px 500px at 50% -10%,#1a1f4a,#05060d)}
+body.day{background:radial-gradient(800px 500px at 50% -10%,#3b3a6a,#0d0f1a)}
+header{position:sticky;top:0;z-index:5;background:rgba(13,15,26,.85);backdrop-filter:blur(8px);border-bottom:1px solid #2a2f4a;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+header .title{font-weight:800;font-size:15px}
+header .info{font-size:12px;color:var(--mut)}
+.hbtn{background:var(--card2);border:1px solid #333a5c;color:var(--txt);border-radius:10px;padding:6px 9px;font-family:inherit;font-size:13px;cursor:pointer}
+main{max-width:620px;margin:0 auto;padding:14px}
+.card{background:var(--card);border:1px solid #262b45;border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.card.host{border-color:#5a4a1f;background:#1c1a14}
+h1,h2,h3{margin:0 0 12px}h2{font-size:19px}h3{font-size:16px}
+.btn{display:block;width:100%;border:none;border-radius:14px;padding:13px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:10px;background:var(--card2);color:var(--txt);transition:.15s}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:linear-gradient(135deg,var(--acc),#b5172a)}
+.btn.ok{background:linear-gradient(135deg,var(--ok),#1a8f85)}
+.btn.warn{background:linear-gradient(135deg,var(--acc2),#c9772d);color:#111}
+.btn.ghost{background:transparent;border:1px solid #3a4066}
+.btn.sm{padding:8px;font-size:13px;margin-top:6px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #262b45}
+.row:last-child{border-bottom:none}
+.counter{display:flex;align-items:center;gap:8px}
+.counter button{width:34px;height:34px;border-radius:50%;border:none;background:var(--card2);color:var(--txt);font-size:19px;cursor:pointer;font-family:inherit}
+.counter span{min-width:24px;text-align:center;font-weight:800;font-size:17px}
+input[type=text],input[type=number]{width:100%;background:#0f1120;border:1px solid #2f3556;color:var(--txt);border-radius:10px;padding:11px;font-family:inherit;font-size:15px}
+input.code{text-align:center;font-size:26px;letter-spacing:6px;font-weight:800;text-transform:uppercase}
+.tag{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700}
+.tag.mafia{background:rgba(230,57,70,.2);color:var(--mafia)}
+.tag.city{background:rgba(46,196,182,.2);color:var(--city)}
+.tag.neutral{background:rgba(199,125,255,.2);color:var(--neutral)}
+.muted{color:var(--mut);font-size:13px;line-height:1.8}
+.big{text-align:center;font-size:24px;font-weight:900;margin:20px 0}
+.huge{text-align:center;font-size:60px;margin:6px 0}
+.codebox{text-align:center;font-size:44px;font-weight:900;letter-spacing:10px;color:var(--acc2);margin:10px 0}
+.plist{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pbtn{background:var(--card2);border:2px solid transparent;border-radius:14px;padding:13px 8px;color:var(--txt);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;text-align:center}
+.pbtn.sel{border-color:var(--acc2);background:rgba(244,162,97,.15)}
+.pbtn:disabled{opacity:.3;cursor:not-allowed}
+.timer{text-align:center;font-size:54px;font-weight:900;font-variant-numeric:tabular-nums;margin:6px 0}
+.timer.low{color:var(--acc)}
+.pill{background:#0f1120;border-radius:12px;padding:9px 12px;margin:6px 0;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.pill small{color:var(--mut);font-size:12px;width:100%}
+.rolecard{text-align:center;padding:22px;border-radius:18px;border:2px dashed #3a4066}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.overlay .card{max-height:85vh;overflow:auto;width:100%;max-width:560px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:7px 5px;border-bottom:1px solid #262b45;text-align:right}
+.log{font-size:13px;line-height:1.9;color:#c9cde8;max-height:280px;overflow:auto;background:#0f1120;padding:10px;border-radius:12px}
+.fade{animation:f .35s ease}@keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.result-msg{font-size:19px;text-align:center;line-height:2;padding:8px}
+.check{display:flex;align-items:center;gap:10px;padding:8px 0}.check input{width:20px;height:20px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#555;margin-left:6px}.dot.on{background:var(--ok)}
+.status{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);background:#222846;border:1px solid #3a4066;padding:8px 14px;border-radius:999px;font-size:12px;z-index:9;max-width:90%;text-align:center}
+.qr{display:block;margin:10px auto;border-radius:12px;background:#fff;padding:6px;width:180px}
+.banner{background:rgba(230,57,70,.15);border:1px solid var(--acc);border-radius:12px;padding:10px;margin-bottom:10px;text-align:center;font-weight:700}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="title">🎭 شب‌های مافیا</div><div class="info" id="hinfo">چندگوشی</div></div>
+  <div style="display:flex;gap:6px">
+    <button class="hbtn" id="ttsbtn" onclick="localTTS=!localTTS;render()">🔇</button>
+    <button class="hbtn" onclick="showHelp()">📖</button>
+    <button class="hbtn" onclick="leave()">🚪</button>
+  </div>
+</header>
+<main id="app"></main>
+<div id="modal"></div>
+<div class="status" id="status" style="display:none"></div>
+
+<script>
+/* ================= داده‌ها ================= */
+const ROLES={
+ godfather:{name:'پدرخوانده',side:'mafia',icon:'🎩',desc:'رهبر مافیا. انتخاب او برای شلیک شب نهایی است. در استعلام کارآگاه «شهروند» نشان داده می‌شود.'},
+ saul:{name:'ساول گودمن',side:'mafia',icon:'💼',desc:'یک بار در بازی می‌تواند یک «شهروند ساده» را بخرد و به مافیا اضافه کند. اگر هدف شهروند ساده نباشد، قابلیت می‌سوزد.'},
+ matador:{name:'ماتادور',side:'mafia',icon:'🐂',desc:'هر شب یک نفر را انتخاب می‌کند؛ قابلیت آن شخص در آن شب باطل می‌شود. دو شب پشت‌سرهم نمی‌تواند یک نفر را انتخاب کند.'},
+ mafia:{name:'مافیای ساده',side:'mafia',icon:'🕶️',desc:'عضو تیم مافیا. در تصمیم شلیک شب شرکت می‌کند.'},
+ doctor:{name:'دکتر واتسون',side:'city',icon:'🩺',desc:'هر شب یک نفر را نجات می‌دهد. خودش را فقط یک بار می‌تواند نجات دهد.'},
+ leon:{name:'لئون حرفه‌ای',side:'city',icon:'🎯',desc:'دو گلوله دارد. اگر به مافیا شلیک کند او می‌میرد؛ اگر به شهروند شلیک کند، خودِ لئون می‌میرد.'},
+ detective:{name:'کارآگاه',side:'city',icon:'🔍',desc:'هر شب یک نفر را استعلام می‌کند: مافیا یا شهروند. پدرخوانده «شهروند» نشان داده می‌شود.'},
+ kane:{name:'همشهری کین',side:'city',icon:'🛡️',desc:'اگر با رأی‌گیری خارج شود، رأی‌گیری باطل می‌شود و در بازی می‌ماند (یک بار). نقشش برای همه فاش می‌شود.'},
+ constantine:{name:'کنستانتین',side:'city',icon:'✝️',desc:'یک بار در بازی می‌تواند یک بازیکن خارج‌شده را به عنوان «شهروند ساده» برگرداند.'},
+ citizen:{name:'شهروند ساده',side:'city',icon:'👤',desc:'قابلیت خاصی ندارد؛ با استدلال و رأی مافیا را پیدا می‌کند.'},
+ nostradamus:{name:'نوستراداموس',side:'neutral',icon:'🔮',desc:'شب معارفه سه نفر را انتخاب می‌کند و می‌فهمد چند نفرشان مافیا هستند؛ سپس برنده را پیش‌بینی می‌کند و به آن طرف می‌پیوندد. با شلیک مافیا نمی‌میرد.'}
+};
+const SIDE_NAME={mafia:'مافیا',city:'شهروند',neutral:'مستقل'};
+const ROLE_ORDER=['godfather','saul','matador','mafia','doctor','leon','detective','kane','constantine','citizen','nostradamus'];
+const SINGLE=['godfather','saul','matador','doctor','leon','detective','kane','constantine','nostradamus'];
+const PREFIX='mafia-shabha-v2-';
+const PEERCFG={debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}};
+
+/* ================= متغیرهای عمومی ================= */
+let isHost=false,peer=null,conns={},hostConn=null,G=null,V=null,localTTS=false,lastAnn=null,tickInt=null,reconnT=null,uiSel=[],uiKey='',uiHide=false;
+let ME={room:null,pid:null,token:null,name:''};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const genCode=()=>{const ch='ABCDEFGHJKMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<5;i++)s+=ch[Math.floor(Math.random()*ch.length)];return s};
+const rndToken=()=>Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
+function setStatus(t){const s=$('status');if(!t){s.style.display='none';return}s.style.display='block';s.textContent=t}
+function say(t){if(!localTTS||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='fa-IR';u.rate=.95;const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith('fa'));if(v)u.voice=v;speechSynthesis.speak(u)}catch(e){}}
+
+/* ================= ابزار حالت (فقط میزبان) ================= */
+const P=id=>G.players.find(p=>p.id===id);
+const alive=()=>G.players.filter(p=>p.alive);
+const side=p=>ROLES[p.role].side;
+const aliveRole=r=>alive().filter(p=>p.role===r);
+const log=t=>G.log.push(t);
+const announce=t=>{G.ann={id:Date.now()+Math.random(),text:t}};
+function newGame(){return{phase:'lobby',players:[],roleCounts:{},rolesTouched:false,settings:{speechTime:60,defenseTime:45,revealExiled:false,deadSeeRoles:true},nightNum:0,dayNum:0,
+ ab:{doctorSelfUsed:false,leonBullets:2,constantineUsed:false,saulUsed:false,kaneUsed:false,lastMatador:null,nostra:{picks:[],count:null,side:null}},log:[],night:null,day:null,winner:null,ann:null,nextId:1,hostPlays:true}}
+function mkPlayer(id,name,token){return{id,name,token,role:null,alive:true,connected:true,ready:false,bought:false,revived:false}}
+function suggest(n){const c={};ROLE_ORDER.forEach(r=>c[r]=0);const mN=n<=6?1:n<=8?2:n<=11?3:4;const mo=['godfather','saul','matador','mafia'];for(let i=0;i<mN;i++)c[mo[Math.min(i,3)]]++;if(mN>4)c.mafia+=mN-4;let neu=0;if(n>=9){c.nostradamus=1;neu=1}let cN=n-mN-neu;for(const r of ['doctor','leon','detective','kane','constantine']){if(cN<=0)break;c[r]=1;cN--}c.citizen=Math.max(0,cN);return c}
+
+/* ================= شبکه: میزبان ================= */
+function createRoom(){
+ const name=($('nm').value||'').trim()||'میزبان';const plays=$('hp').checked;ME.name=name;localStorage.setItem('mafia_name',name);
+ setStatus('در حال ساخت اتاق...');
+ openHostPeer(genCode(),false,()=>{G=newGame();G.hostPlays=plays;if(plays){G.players.push(mkPlayer(0,name,'host'));ME.pid=0}else ME.pid=null;isHost=true;localTTS=true;startTick();setStatus('');pushAll()});
+}
+function openHostPeer(code,resuming,ok,tries=0){
+ if(peer){try{peer.destroy()}catch(e){}}
+ peer=new Peer(PREFIX+code,PEERCFG);
+ peer.on('open',()=>{ME.room=code;ok()});
+ peer.on('connection',c=>setupConn(c));
+ peer.on('error',e=>{
+  if(e.type==='unavailable-id'){if(resuming){if(tries<6){setStatus('در حال بازیابی اتاق...');setTimeout(()=>openHostPeer(code,true,ok,tries+1),2500)}else{alert('بازیابی اتاق ممکن نشد. کمی صبر کن و دوباره تلاش کن.');setStatus('')}}else openHostPeer(genCode(),false,ok)}
+  else if(e.type!=='peer-unavailable')console.warn(e);
+ });
+ peer.on('disconnected',()=>{try{peer.reconnect()}catch(e){}});
+}
+function setupConn(c){
+ c.on('data',m=>{
+  if(!G)return;
+  if(m.t==='join'){
+   if(G.phase!=='lobby'){c.send({t:'err',msg:'بازی شروع شده است؛ نمی‌توان وارد شد.'});return}
+   if(G.players.length>=16){c.send({t:'err',msg:'اتاق پر است.'});return}
+   let name=(m.name||'').trim()||'بازیکن';let base=name,k=2;while(G.players.some(p=>p.name===name))name=base+' '+(k++);
+   const p=mkPlayer(G.nextId++,name,rndToken());G.players.push(p);conns[p.id]=c;c.pid=p.id;
+   if(!G.rolesTouched)G.roleCounts=suggest(G.players.length);
+   c.send({t:'joined',pid:p.id,token:p.token,room:ME.room});log(`👋 ${name} وارد شد`);pushAll();
+  }else if(m.t==='rejoin'){
+   const p=P(m.pid);if(!p||p.token!==m.token){c.send({t:'err',msg:'بازیکن در این اتاق پیدا نشد.'});return}
+   if(conns[p.id]&&conns[p.id]!==c){try{conns[p.id].close()}catch(e){}}
+   conns[p.id]=c;c.pid=p.id;p.connected=true;c.send({t:'joined',pid:p.id,token:p.token,room:ME.room});pushAll();
+  }else if(m.t==='act'){if(c.pid==null)return;try{handleAction(c.pid,m)}catch(e){console.error(e)}pushAll()}
+ });
+ c.on('close',()=>{if(c.pid!=null&&conns[c.pid]===c){conns[c.pid]=null;const p=P(c.pid);if(p)p.connected=false;pushAll()}});
+ c.on('error',()=>{});
+}
+function pushAll(){
+ if(!isHost||!G)return;
+ try{localStorage.setItem('mafia_host',JSON.stringify({room:ME.room,pid:ME.pid,G}))}catch(e){}
+ G.players.forEach(p=>{const c=conns[p.id];if(c&&c.open){try{c.send({t:'view',view:buildView(p.id)})}catch(e){}}});
+ V=buildView(ME.pid);render();
+}
+function startTick(){clearInterval(tickInt);tickInt=setInterval(()=>{if(!G||G.phase!=='day'||!G.day||!G.day.timerEnd)return;if(Date.now()>=G.day.timerEnd){if(G.day.stage==='speech')nextSpeech();else if(G.day.stage==='defense')nextDefense()}pushAll()},1000)}
+
+/* ================= شبکه: بازیکن ================= */
+function joinRoom(){
+ const name=($('nm').value||'').trim();const code=($('cd').value||'').trim().toUpperCase();
+ if(!name){alert('اسمت را بنویس');return}if(code.length!==5){alert('کد اتاق ۵ حرفی است');return}
+ ME={room:code,pid:null,token:null,name};localStorage.setItem('mafia_name',name);connectAsClient();
+}
+function connectAsClient(){
+ setStatus('در حال اتصال به اتاق '+ME.room+'...');
+ if(peer){try{peer.destroy()}catch(e){}}
+ peer=new Peer(undefined,PEERCFG);
+ peer.on('open',()=>connectHost());
+ peer.on('error',e=>{if(e.type==='peer-unavailable'){setStatus('اتاق پیدا نشد؛ تلاش مجدد...');scheduleReconnect()}});
+ peer.on('disconnected',()=>{try{peer.reconnect()}catch(e){}});
+}
+function connectHost(){
+ hostConn=peer.connect(PREFIX+ME.room,{reliable:true});
+ hostConn.on('open',()=>{setStatus('');if(ME.token)hostConn.send({t:'rejoin',pid:ME.pid,token:ME.token});else hostConn.send({t:'join',name:ME.name})});
+ hostConn.on('data',onClientMsg);
+ hostConn.on('close',()=>{setStatus('ارتباط قطع شد؛ تلاش مجدد...');scheduleReconnect()});
+ hostConn.on('error',()=>scheduleReconnect());
+}
+function scheduleReconnect(){clearTimeout(reconnT);reconnT=setTimeout(()=>{if(!peer||peer.destroyed){connectAsClient();return}if(peer.disconnected){try{peer.reconnect()}catch(e){}}connectHost()},3000)}
+function onClientMsg(m){
+ if(m.t==='joined'){ME.pid=m.pid;ME.token=m.token;localStorage.setItem('mafia_cli',JSON.stringify(ME))}
+ else if(m.t==='view'){V=m.view;render()}
+ else if(m.t==='err'){alert(m.msg);localStorage.removeItem('mafia_cli');location.href=location.pathname}
+}
+function act(msg){if(isHost){if(ME.pid==null)return;try{handleAction(ME.pid,msg)}catch(e){console.error(e)}pushAll()}else if(hostConn&&hostConn.open)hostConn.send({t:'act',...msg})}
+function hctl(cmd,arg){if(!isHost)return;try{hostCmd(cmd,arg)}catch(e){console.error(e)}pushAll()}
+function leave(){if(!confirm(isHost?'اتاق بسته شود؟ (بازی برای همه تمام می‌شود)':'از اتاق خارج می‌شوی؟'))return;localStorage.removeItem(isHost?'mafia_host':'mafia_cli');try{peer&&peer.destroy()}catch(e){}location.href=location.pathname}
+
+/* ================= دستورات میزبان ================= */
+function hostCmd(cmd,a){
+ switch(cmd){
+  case 'kick':{const i=G.players.findIndex(p=>p.id===a);if(i<0||a===ME.pid)return;const c=conns[a];if(c){try{c.send({t:'err',msg:'توسط میزبان از اتاق حذف شدی.'});setTimeout(()=>c.close(),300)}catch(e){}}delete conns[a];G.players.splice(i,1);if(!G.rolesTouched)G.roleCounts=suggest(G.players.length);break}
+  case 'move':{const i=G.players.findIndex(p=>p.id===a.id),j=i+a.dir;if(i<0||j<0||j>=G.players.length)return;[G.players[i],G.players[j]]=[G.players[j],G.players[i]];break}
+  case 'role':{const max=SINGLE.includes(a.r)?1:99;G.roleCounts[a.r]=Math.max(0,Math.min(max,(G.roleCounts[a.r]||0)+a.d));G.rolesTouched=true;break}
+  case 'suggest':G.roleCounts=suggest(G.players.length);G.rolesTouched=false;break;
+  case 'setting':G.settings[a.k]=a.v;break;
+  case 'start':startGame();break;
+  case 'forceReveal':startNight(0);break;
+  case 'forceNight':forceNight();break;
+  case 'continue':if(G.phase==='day'){if(G.day.stage==='intro')afterIntro();else if(G.day.stage==='result')afterDay()}break;
+  case 'nextSpeech':nextSpeech();break;case 'skipToVote':goVote();break;case 'endVote1':endVote1();break;case 'nextDefense':nextDefense();break;case 'endVote2':endFinalVote();break;
+  case 'newGame':{const keep=G;G=newGame();G.hostPlays=keep.hostPlays;G.settings=keep.settings;G.roleCounts=keep.roleCounts;G.rolesTouched=true;G.nextId=keep.nextId;G.players=keep.players.map(p=>mkPlayer(p.id,p.name,p.token));G.players.forEach(p=>p.connected=!!(conns[p.id]&&conns[p.id].open)||p.id===ME.pid);break}
+ }
+}
+function startGame(){
+ const n=G.players.length;const total=ROLE_ORDER.reduce((s,r)=>s+(G.roleCounts[r]||0),0);const m=ROLE_ORDER.filter(r=>ROLES[r].side==='mafia').reduce((s,r)=>s+(G.roleCounts[r]||0),0);
+ if(n<4){announce('حداقل ۴ بازیکن لازم است');return}if(total!==n||m===0||m>=n-m)return;
+ const roles=[];ROLE_ORDER.forEach(r=>{for(let i=0;i<(G.roleCounts[r]||0);i++)roles.push(r)});shuffle(roles);
+ G.players.forEach((p,i)=>{p.role=roles[i];p.alive=true;p.ready=false;p.bought=false;p.revived=false});
+ G.log=[];log('🎲 نقش‌ها پخش شد: '+G.players.map(p=>`${p.name}=${ROLES[p.role].name}`).join('، '));
+ G.phase='reveal';announce('نقش‌ها پخش شد. هر کس نقش خودش را روی گوشی‌اش ببیند.');
+}
+
+/* ================= پردازش عمل بازیکنان ================= */
+function handleAction(pid,m){
+ const p=P(pid);if(!p)return;
+ if(G.phase==='reveal'){if(m.a==='ready'){p.ready=true;if(G.players.every(x=>x.ready))startNight(0)}return}
+ if(G.phase==='night')return nightAct(p,m);
+ if(G.phase==='day')return dayAct(p,m);
+}
+
+/* ---------- شب ---------- */
+function startNight(n){
+ G.nightNum=n;G.phase='night';G.day=null;G.players.forEach(p=>p.ready=false);
+ G.night={sub:(n>0&&aliveRole('matador').length)?'matador':'main',done:{},mafiaPicks:{},matadorTarget:null,acts:{}};
+ announce(n===0?'شب معارفه. همه گوشی خودشان را نگاه کنند.':`شب ${n} می‌شود. هر کس فقط گوشی خودش را نگاه کند.`);
+ checkNightDone();
+}
+function requiredKeys(){
+ const N=G.night,r=[];const add=(k,id)=>r.push({key:k+':'+id,pid:id});
+ if(G.nightNum===0){alive().filter(p=>side(p)==='mafia').forEach(p=>add('shot',p.id));aliveRole('nostradamus').forEach(p=>add('role',p.id))}
+ else if(N.sub==='matador'){aliveRole('matador').forEach(p=>add('role',p.id))}
+ else{
+  alive().filter(p=>side(p)==='mafia').forEach(p=>add('shot',p.id));
+  if(!G.ab.saulUsed)aliveRole('saul').forEach(p=>add('role',p.id));
+  aliveRole('doctor').forEach(p=>add('role',p.id));aliveRole('detective').forEach(p=>add('role',p.id));
+  if(G.ab.leonBullets>0)aliveRole('leon').forEach(p=>add('role',p.id));
+  if(!G.ab.constantineUsed&&G.players.some(x=>!x.alive))aliveRole('constantine').forEach(p=>add('role',p.id));
+ }
+ return r;
+}
+function pendingKeys(){return requiredKeys().filter(k=>!G.night.done[k.key])}
+function checkNightDone(){
+ if(pendingKeys().length)return;
+ if(G.night.sub==='matador'){G.night.sub='main';if(pendingKeys().length)return}
+ resolveNight();
+}
+function forceNight(){pendingKeys().forEach(k=>G.night.done[k.key]=1);log('⏭ میزبان شب را جلو برد');checkNightDone()}
+function nightAct(p,m){
+ if(!p.alive)return;const N=G.night,A=N.acts;const rk='role:'+p.id,sk='shot:'+p.id;
+ if(N.sub==='matador'){if(p.role!=='matador'||N.done[rk])return;if(m.a==='matador'){N.matadorTarget=m.id??null;G.ab.lastMatador=m.id??null;N.done[rk]=1;log(`🐂 ماتادور ← ${m.id!=null?P(m.id).name:'هیچ‌کس'}`);checkNightDone()}return}
+ switch(m.a){
+  case 'mafiaOk':if(side(p)==='mafia')N.done[sk]=1;break;
+  case 'mafiaPick':if(side(p)==='mafia'&&!N.done[sk]){if(m.id!=null&&(!P(m.id)||!P(m.id).alive||side(P(m.id))==='mafia'))return;N.mafiaPicks[p.id]=m.id??null}break;
+  case 'mafiaSubmit':if(side(p)==='mafia'){if(!(p.id in N.mafiaPicks))N.mafiaPicks[p.id]=null;N.done[sk]=1;log(`🕶️ ${p.name} برای شلیک: ${N.mafiaPicks[p.id]!=null?P(N.mafiaPicks[p.id]).name:'—'}`)}break;
+  case 'saul':if(p.role==='saul'&&!N.done[rk]){A.saul=m.id??null;N.done[rk]=1;log(`💼 ساول ← ${m.id!=null?P(m.id).name:'—'}`)}break;
+  case 'doctor':if(p.role==='doctor'&&!N.done[rk]){if(m.id===p.id&&G.ab.doctorSelfUsed)return;A.doctor=m.id??null;if(m.id===p.id)G.ab.doctorSelfUsed=true;N.done[rk]=1;log(`🩺 دکتر ← ${m.id!=null?P(m.id).name:'—'}`)}break;
+  case 'detective':if(p.role==='detective'&&!N.done[rk]){const blocked=N.matadorTarget===p.id;let res={blocked:true};if(m.id!=null){const t=P(m.id);if(!t)return;res=blocked?{blocked:true,name:t.name}:{blocked:false,name:t.name,mafia:side(t)==='mafia'&&t.role!=='godfather'}}else res={skipped:true};A.detective=res;N.done[rk]=1;log(`🔍 کارآگاه ← ${res.name||'—'}: ${res.skipped?'—':res.blocked?'مسدود':res.mafia?'مافیا':'شهروند'}`)}break;
+  case 'leon':if(p.role==='leon'&&!N.done[rk]){A.leon=m.id??null;N.done[rk]=1;log(`🎯 لئون ← ${m.id!=null?P(m.id).name:'—'}`)}break;
+  case 'constantine':if(p.role==='constantine'&&!N.done[rk]){A.constantine=m.id??null;N.done[rk]=1;log(`✝️ کنستانتین ← ${m.id!=null?P(m.id).name:'—'}`)}break;
+  case 'nostraPick':if(p.role==='nostradamus'&&G.nightNum===0&&G.ab.nostra.count===null){const ids=[...new Set(m.ids||[])].filter(id=>P(id)&&id!==p.id).slice(0,3);if(ids.length!==3)return;G.ab.nostra.picks=ids;G.ab.nostra.count=ids.filter(id=>side(P(id))==='mafia').length;log(`🔮 نوستراداموس ${ids.map(id=>P(id).name).join('، ')}: ${G.ab.nostra.count} مافیا`)}break;
+  case 'nostraSide':if(p.role==='nostradamus'&&G.ab.nostra.count!==null&&!G.ab.nostra.side&&(m.side==='mafia'||m.side==='city')){G.ab.nostra.side=m.side;N.done[rk]=1;log(`🔮 نوستراداموس پیش‌بینی کرد: ${SIDE_NAME[m.side]}`)}break;
+ }
+ checkNightDone();
+}
+function mafiaTarget(){const N=G.night;const gf=aliveRole('godfather')[0];if(gf&&(gf.id in N.mafiaPicks))return N.mafiaPicks[gf.id];const t={};Object.values(N.mafiaPicks).forEach(id=>{if(id!=null)t[id]=(t[id]||0)+1});const ids=Object.keys(t);if(!ids.length)return null;const mx=Math.max(...Object.values(t));const top=ids.filter(i=>t[i]===mx);return +top[Math.floor(Math.random()*top.length)]}
+function resolveNight(){
+ const N=G.night,A=N.acts,deaths=new Set(),events=[];const blocked=id=>N.matadorTarget!=null&&N.matadorTarget===id;
+ if(G.nightNum>0){
+  const doc=aliveRole('doctor')[0];const saved=(A.doctor!=null&&doc&&!blocked(doc.id))?A.doctor:null;
+  const shot=mafiaTarget();
+  if(shot!=null){const t=P(shot);if(t.role==='nostradamus')log('🛡 نوستراداموس در برابر شلیک مافیا مقاوم بود');else if(saved===t.id)log(`🩺 دکتر ${t.name} را از شلیک مافیا نجات داد`);else deaths.add(t.id);log(`🔫 شلیک مافیا ← ${t.name}`)}else log('🔫 مافیا شلیک نکرد');
+  const leon=aliveRole('leon')[0];
+  if(A.leon!=null&&leon&&G.ab.leonBullets>0){if(blocked(leon.id))log('⛔ شلیک لئون مسدود شد');else{G.ab.leonBullets--;const t=P(A.leon);if(side(t)==='mafia'){if(saved===t.id)log(`🩺 دکتر ${t.name} را از شلیک لئون نجات داد`);else{deaths.add(t.id);log(`🎯 لئون مافیا (${t.name}) را زد`)}}else{if(saved===leon.id)log('🩺 دکتر لئون را نجات داد');else{deaths.add(leon.id);log(`🎯 لئون به شهروند (${t.name}) شلیک کرد و خودش کشته شد`)}}}}
+  const saul=aliveRole('saul')[0];
+  if(A.saul!=null&&saul&&!G.ab.saulUsed){G.ab.saulUsed=true;const t=P(A.saul);if(blocked(saul.id))log('⛔ خرید ساول مسدود شد');else if(t.role==='citizen'&&!deaths.has(t.id)){t.role='mafia';t.bought=true;log(`💼 ساول ${t.name} را خرید`)}else log(`💼 خرید ساول روی ${t.name} ناموفق بود`)}
+  const con=aliveRole('constantine')[0];
+  if(A.constantine!=null&&con&&!G.ab.constantineUsed){if(blocked(con.id))log('⛔ احیای کنستانتین مسدود شد');else{G.ab.constantineUsed=true;const t=P(A.constantine);if(!t.alive){t.alive=true;t.role='citizen';t.revived=true;t.bought=false;events.push(`✝️ کنستانتین ${t.name} را به بازی بازگرداند!`);log(`✝️ کنستانتین ${t.name} را احیا کرد`)}}}
+ }
+ const dl=[...deaths];dl.forEach(id=>P(id).alive=false);
+ log(dl.length?`☠️ کشته‌های شب ${G.nightNum}: ${dl.map(id=>P(id).name).join('، ')}`:`🌅 شب ${G.nightNum} بدون کشته`);
+ G.dayNum++;G.phase='day';G.night=null;
+ G.day={stage:'intro',deaths:dl.map(id=>P(id).name),events,order:[],sIdx:0,timerEnd:null,votes:{},candidates:[],dIdx:0,fvotes:{},exiled:null,resultMsg:''};
+ announce(G.nightNum===0?'صبح بخیر. شب معارفه بدون اتفاق گذشت.':(dl.length?`صبح بخیر. دیشب ${dl.map(id=>P(id).name).join(' و ')} از بازی خارج شد.`:'صبح بخیر. دیشب شب آرامی بود.'));
+}
+
+/* ---------- روز ---------- */
+function checkWin(){const m=alive().filter(p=>side(p)==='mafia').length,c=alive().filter(p=>side(p)==='city').length;if(m===0)return'city';if(m>=c)return'mafia';return null}
+function endGame(w){G.winner=w;G.phase='end';G.day=null;log(`🏆 برنده: ${SIDE_NAME[w]}`);announce(w==='mafia'?'بازی تمام شد. مافیا برنده شد.':'بازی تمام شد. شهر برنده شد.')}
+function afterIntro(){const w=checkWin();if(w){endGame(w);return}const n=G.players.length,st=(G.dayNum-1)%n,order=[];for(let i=0;i<n;i++){const p=G.players[(st+i)%n];if(p.alive)order.push(p.id)}G.day.order=order;G.day.sIdx=0;G.day.stage='speech';G.day.timerEnd=Date.now()+G.settings.speechTime*1000;announce(`نوبت صحبت ${P(order[0]).name}`)}
+function nextSpeech(){const D=G.day;if(D.stage!=='speech')return;if(D.sIdx+1<D.order.length){D.sIdx++;D.timerEnd=Date.now()+G.settings.speechTime*1000;announce(`نوبت صحبت ${P(D.order[D.sIdx]).name}`)}else goVote()}
+function goVote(){const D=G.day;if(D.stage!=='speech')return;D.stage='vote';D.votes={};D.timerEnd=null;announce('رأی‌گیری اول. روی گوشی خود رأی دهید.')}
+function endVote1(){
+ const D=G.day;if(D.stage!=='vote')return;const th=Math.ceil(alive().length/2);const cnt={};alive().forEach(p=>cnt[p.id]=0);Object.values(D.votes).forEach(ids=>ids.forEach(id=>{if(id in cnt)cnt[id]++}));
+ D.candidates=alive().filter(p=>cnt[p.id]>=th).sort((a,b)=>cnt[b.id]-cnt[a.id]).map(p=>p.id);
+ log(`🗳 روز ${G.dayNum} رأی اول: ${alive().map(p=>`${p.name}=${cnt[p.id]}`).join('، ')}`);
+ if(!D.candidates.length){D.exiled=null;D.resultMsg='هیچ‌کس به حدنصاب دفاعیه نرسید. امروز کسی خارج نمی‌شود.';D.stage='result';announce('کسی به دفاعیه نرفت.');return}
+ D.dIdx=0;D.stage='defense';D.timerEnd=Date.now()+G.settings.defenseTime*1000;announce(`دفاعیه ${P(D.candidates[0]).name}`);
+}
+function nextDefense(){const D=G.day;if(D.stage!=='defense')return;if(D.dIdx+1<D.candidates.length){D.dIdx++;D.timerEnd=Date.now()+G.settings.defenseTime*1000;announce(`دفاعیه ${P(D.candidates[D.dIdx]).name}`)}else{D.stage='finalvote';D.fvotes={};D.timerEnd=null;announce('رأی‌گیری نهایی.')}}
+function endFinalVote(){
+ const D=G.day;if(D.stage!=='finalvote')return;const th=Math.ceil(alive().length/2);const cnt={};D.candidates.forEach(id=>cnt[id]=0);Object.values(D.fvotes).forEach(id=>{if(id in cnt)cnt[id]++});
+ log(`⚖️ روز ${G.dayNum} رأی نهایی: ${D.candidates.map(id=>`${P(id).name}=${cnt[id]}`).join('، ')}`);
+ let mx=-1,who=[];D.candidates.forEach(id=>{if(cnt[id]>mx){mx=cnt[id];who=[id]}else if(cnt[id]===mx)who.push(id)});
+ if(mx<th||who.length!==1){D.exiled=null;D.resultMsg=(who.length>1&&mx>=th)?'رأی‌ها مساوی شد؛ کسی خارج نمی‌شود.':'رأی کافی برای خروج نبود؛ کسی خارج نمی‌شود.';D.stage='result';announce(D.resultMsg);return}
+ const p=P(who[0]);
+ if(p.role==='kane'&&!G.ab.kaneUsed){G.ab.kaneUsed=true;D.exiled=null;D.resultMsg=`🛡️ ${p.name} همشهری کین است! رأی‌گیری باطل شد و او در بازی می‌ماند.`;log(`🛡 همشهری کین (${p.name}) رأی‌گیری را باطل کرد`);D.stage='result';announce(D.resultMsg);return}
+ p.alive=false;D.exiled=p.id;D.resultMsg=`${p.name} با ${mx} رأی از بازی خارج شد.`+(G.settings.revealExiled?` نقش او: ${ROLES[p.role].name}`:'');
+ log(`🚪 ${p.name} با رأی خارج شد (${ROLES[p.role].name})`);D.stage='result';announce(`${p.name} از بازی خارج شد.`);
+}
+function afterDay(){const w=checkWin();if(w){endGame(w);return}startNight(G.nightNum+1)}
+function dayAct(p,m){
+ const D=G.day;
+ if(m.a==='endSpeech'&&D.stage==='speech'&&D.order[D.sIdx]===p.id)nextSpeech();
+ else if(m.a==='endDefense'&&D.stage==='defense'&&D.candidates[D.dIdx]===p.id)nextDefense();
+ else if(m.a==='vote1'&&D.stage==='vote'&&p.alive&&!(p.id in D.votes)){D.votes[p.id]=[...new Set(m.ids||[])].filter(id=>id!==p.id&&P(id)&&P(id).alive);if(alive().every(x=>x.id in D.votes))endVote1()}
+ else if(m.a==='vote2'&&D.stage==='finalvote'&&p.alive&&!(p.id in D.fvotes)){D.fvotes[p.id]=(m.id!=null&&D.candidates.includes(m.id)&&m.id!==p.id)?m.id:null;if(alive().every(x=>x.id in D.fvotes))endFinalVote()}
+}
+
+/* ================= ساخت نمای هر بازیکن ================= */
+function buildView(pid){
+ const me=pid!=null?P(pid):null;
+ const seeAll=G.phase==='end'||(me&&!me.alive&&G.settings.deadSeeRoles);
+ const v={phase:G.phase,nightNum:G.nightNum,dayNum:G.dayNum,room:ME.room,hostPlays:G.hostPlays,settings:G.settings,roleCounts:G.roleCounts,ann:G.ann,
+  me:me?{id:me.id,name:me.name,alive:me.alive,role:me.role,side:me.role?side(me):null,bought:me.bought,revived:me.revived,ready:me.ready}:null,
+  players:G.players.map(p=>{const showRole=p.role&&(seeAll||(me&&me.alive&&me.role&&side(me)==='mafia'&&side(p)==='mafia'));return{id:p.id,name:p.name,alive:p.alive,connected:p.connected||p.id===ME.pid,ready:p.ready,role:showRole?p.role:null,bought:showRole&&p.bought,revived:seeAll&&p.revived}})};
+ if(G.phase==='reveal')v.reveal={ready:G.players.filter(p=>p.ready).length,total:G.players.length};
+ if(G.phase==='night')v.night=nightView(me);
+ if(G.phase==='day')v.day=dayView(me);
+ if(G.phase==='end'){const ns=G.players.find(p=>p.role==='nostradamus');v.end={winner:G.winner,log:G.log,nostra:ns?{name:ns.name,won:ns.alive&&G.ab.nostra.side===G.winner}:null}}
+ if(isHost&&pid===ME.pid)v.hostInfo={pending:G.phase==='night'?pendingKeys().length:0,voted:G.day?(G.day.stage==='vote'?Object.keys(G.day.votes).length:G.day.stage==='finalvote'?Object.keys(G.day.fvotes).length:0):0,aliveN:alive().length};
+ return v;
+}
+function nightView(me){
+ const N=G.night;const w={mode:'wait',done:false};
+ if(!me||!me.alive||!me.role)return w;
+ const rk='role:'+me.id,sk='shot:'+me.id;const req=requiredKeys().filter(k=>k.pid===me.id).map(k=>k.key);
+ const targets=f=>alive().filter(f).map(p=>({id:p.id,name:p.name}));
+ const mafiaInfo=side(me)==='mafia'?{team:G.players.filter(p=>side(p)==='mafia').map(p=>({id:p.id,name:p.name,alive:p.alive,role:p.role,bought:p.bought,pick:p.id in N.mafiaPicks?N.mafiaPicks[p.id]:undefined,pickName:N.mafiaPicks[p.id]!=null?P(N.mafiaPicks[p.id]).name:null,done:!!N.done['shot:'+p.id]})),gfAlive:!!aliveRole('godfather').length,myPick:N.mafiaPicks[me.id]}:null;
+ w.mafiaInfo=mafiaInfo;w.done=req.length>0&&req.every(k=>N.done[k]);
+ if(N.sub==='matador'){if(me.role==='matador'&&!N.done[rk])return{...w,mode:'matador',targets:targets(p=>p.id!==me.id&&p.id!==G.ab.lastMatador)};return w}
+ if(G.nightNum===0){
+  if(side(me)==='mafia'&&!N.done[sk])return{...w,mode:'mafiaIntro'};
+  if(me.role==='nostradamus'&&!N.done[rk])return{...w,mode:'nostra',picks:G.ab.nostra.picks.map(id=>P(id).name),count:G.ab.nostra.count,targets:targets(p=>p.id!==me.id)};
+  return w;
+ }
+ if(side(me)==='mafia'&&!N.done[sk])return{...w,mode:'mafia',targets:targets(p=>side(p)!=='mafia')};
+ if(req.includes(rk)&&!N.done[rk]){
+  switch(me.role){
+   case 'saul':return{...w,mode:'saul',targets:targets(p=>side(p)!=='mafia')};
+   case 'doctor':return{...w,mode:'doctor',selfUsed:G.ab.doctorSelfUsed,targets:targets(p=>!(p.id===me.id&&G.ab.doctorSelfUsed))};
+   case 'detective':return{...w,mode:'detective',targets:targets(p=>p.id!==me.id)};
+   case 'leon':return{...w,mode:'leon',bullets:G.ab.leonBullets,targets:targets(p=>p.id!==me.id)};
+   case 'constantine':return{...w,mode:'constantine',targets:G.players.filter(p=>!p.alive).map(p=>({id:p.id,name:p.name}))};
+  }
+ }
+ if(me.role==='detective'&&N.acts.detective&&!N.acts.detective.skipped)return{...w,mode:'detectiveResult',result:N.acts.detective};
+ return w;
+}
+function dayView(me){
+ const D=G.day;const d={stage:D.stage,deaths:D.deaths,events:D.events,resultMsg:D.resultMsg,timerRem:D.timerEnd?Math.max(0,Math.ceil((D.timerEnd-Date.now())/1000)):null,aliveN:alive().length};
+ if(D.stage==='speech'){const s=P(D.order[D.sIdx]);d.speaker={id:s.id,name:s.name};d.idx=D.sIdx;d.total=D.order.length;d.isMe=!!me&&me.id===s.id}
+ if(D.stage==='defense'){const s=P(D.candidates[D.dIdx]);d.speaker={id:s.id,name:s.name};d.idx=D.dIdx;d.total=D.candidates.length;d.isMe=!!me&&me.id===s.id}
+ if(D.stage==='vote'){d.threshold=Math.ceil(alive().length/2);d.votedN=Object.keys(D.votes).length;d.myVoted=!!me&&(me.id in D.votes);d.tally=alive().map(p=>({id:p.id,name:p.name,voters:Object.entries(D.votes).filter(([v,ids])=>ids.includes(p.id)).map(([v])=>P(+v).name)}));d.targets=alive().filter(p=>!me||p.id!==me.id).map(p=>({id:p.id,name:p.name}))}
+ if(D.stage==='finalvote'){d.threshold=Math.ceil(alive().length/2);d.votedN=Object.keys(D.fvotes).length;d.myVoted=!!me&&(me.id in D.fvotes);d.tally=D.candidates.map(id=>({id,name:P(id).name,voters:Object.entries(D.fvotes).filter(([v,t])=>t===id).map(([v])=>P(+v).name)}));d.abstain=Object.values(D.fvotes).filter(x=>x==null).length;d.targets=D.candidates.filter(id=>!me||id!==me.id).map(id=>({id,name:P(id).name}))}
+ return d;
+}
+
+/* ================= رندر ================= */
+function render(){
+ $('ttsbtn').textContent=localTTS?'🔊':'🔇';
+ if(!V){renderLanding();return}
+ if(V.ann&&V.ann.id!==lastAnn){lastAnn=V.ann.id;say(V.ann.text)}
+ const key=V.phase+':'+(V.night?V.night.mode:'')+':'+(V.day?V.day.stage+V.day.idx:'')+':'+V.nightNum+':'+V.dayNum;
+ if(key!==uiKey){uiKey=key;uiSel=[];uiHide=false}
+ document.body.className=V.phase==='night'?'night':V.phase==='day'?'day':'';
+ const h=$('hinfo');const meTxt=V.me?` | ${V.me.name}`:' | نمایشگر';
+ h.textContent=(V.phase==='lobby'?'اتاق '+V.room:V.phase==='reveal'?'پخش نقش‌ها':V.phase==='night'?(V.nightNum===0?'شب معارفه':'شب '+V.nightNum):V.phase==='day'?'روز '+V.dayNum:'پایان بازی')+meTxt;
+ let html='';
+ switch(V.phase){case 'lobby':html=rLobby();break;case 'reveal':html=rReveal();break;case 'night':html=rNight();break;case 'day':html=rDay();break;case 'end':html=rEnd();break}
+ if(isHost)html+=rHostPanel();
+ $('app').innerHTML=`<div class="fade">${html}</div>`;
+}
+function renderLanding(){
+ const name=localStorage.getItem('mafia_name')||'';const param=new URLSearchParams(location.search).get('room')||'';
+ let saved=null;try{saved=JSON.parse(localStorage.getItem('mafia_cli'))}catch(e){}
+ let sh=null;try{sh=JSON.parse(localStorage.getItem('mafia_host'))}catch(e){}
+ $('hinfo').textContent='چندگوشی';
+ $('app').innerHTML=`<div class="fade">
+ <div class="card"><h2>🎭 ورود به بازی</h2><input type="text" id="nm" placeholder="اسم تو" value="${esc(name)}"><div style="height:10px"></div>
+ <input type="text" class="code" id="cd" placeholder="کد اتاق" maxlength="5" value="${esc(param)}">
+ <button class="btn primary" onclick="joinRoom()">🔑 ورود به اتاق</button>
+ ${saved&&saved.room?`<button class="btn ghost" onclick="ME=${esc(JSON.stringify(saved)).replace(/&quot;/g,'&#34;')};ME=JSON.parse(this.dataset.s);connectAsClient()" data-s='${esc(JSON.stringify(saved))}'>↩ ادامه بازی قبلی (اتاق ${esc(saved.room)})</button>`:''}</div>
+ <div class="card"><h2>🏠 ساخت اتاق جدید</h2><label class="check"><input type="checkbox" id="hp" checked> خودم هم بازی می‌کنم (در غیر این صورت این دستگاه فقط نمایشگر/گوینده است)</label>
+ <button class="btn ok" onclick="createRoom()">➕ ساخت اتاق</button>
+ ${sh&&sh.G&&sh.G.phase!=='end'?`<button class="btn warn" onclick="resumeHost()">↩ بازیابی اتاق ${esc(sh.room)} (بازی ناتمام)</button>`:''}</div>
+ <div class="card muted">📌 همه باید همین صفحه را روی گوشی خودشان باز کنند و با کد اتاق وارد شوند. اتصال مستقیم گوشی‌به‌گوشی است؛ فقط اینترنت لازم است. گوشی میزبان باید تا آخر بازی روشن و روی همین صفحه بماند.</div></div>`;
+}
+function resumeHost(){let sh=null;try{sh=JSON.parse(localStorage.getItem('mafia_host'))}catch(e){}if(!sh)return;setStatus('در حال بازیابی اتاق...');openHostPeer(sh.room,true,()=>{G=sh.G;ME.pid=sh.pid;ME.name=sh.pid!=null&&G.players.find(p=>p.id===sh.pid)?G.players.find(p=>p.id===sh.pid).name:'میزبان';G.players.forEach(p=>p.connected=p.id===ME.pid);isHost=true;localTTS=true;startTick();setStatus('');pushAll()})}
+
+function selT(id,multi,max){if(multi){const i=uiSel.indexOf(id);if(i>=0)uiSel.splice(i,1);else if(!max||uiSel.length<max)uiSel.push(id)}else uiSel=uiSel[0]===id?[]:[id];render()}
+function pbtns(list,multi,max){return `<div class="plist">${list.map(p=>`<button class="pbtn ${uiSel.includes(p.id)?'sel':''}" onclick="selT(${p.id},${multi?1:0},${max||0})">${esc(p.name)}</button>`).join('')}</div>`}
+const tagR=r=>r?`<span class="tag ${ROLES[r].side}">${ROLES[r].icon} ${ROLES[r].name}</span>`:'';
+function playerList(){return V.players.map(p=>`<div class="pill"><span><span class="dot ${p.connected?'on':''}"></span>${p.alive?'':'💀 '}${esc(p.name)}</span>${p.role?tagR(p.role)+(p.bought?' 💼':'')+(p.revived?' ✝️':''):''}</div>`).join('')}
+function timerHTML(rem){const m=Math.floor(rem/60),s=rem%60;return `<div class="timer ${rem<=10?'low':''}">${m}:${String(s).padStart(2,'0')}</div>`}
+
+/* ---- لابی ---- */
+function rLobby(){
+ const n=V.players.length;const total=ROLE_ORDER.reduce((s,r)=>s+(V.roleCounts[r]||0),0);const m=ROLE_ORDER.filter(r=>ROLES[r].side==='mafia').reduce((s,r)=>s+(V.roleCounts[r]||0),0);
+ const link=location.protocol.startsWith('http')?location.origin+location.pathname+'?room='+V.room:null;
+ let h=`<div class="card"><h2>🏠 اتاق بازی</h2><p class="muted" style="text-align:center;margin:0">کد اتاق</p><div class="codebox">${esc(V.room)}</div>
+ ${link?`<img class="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(link)}"><button class="btn ghost sm" onclick="navigator.clipboard&&navigator.clipboard.writeText('${link}');this.textContent='✅ کپی شد'">📋 کپی لینک دعوت</button>`:'<p class="muted" style="text-align:center">بقیه همین فایل را باز کنند و کد را وارد کنند.</p>'}
+ </div><div class="card"><h3>👥 بازیکنان (${n}) — به ترتیب نشستن</h3>
+ ${V.players.map((p,i)=>`<div class="pill"><span><span class="dot ${p.connected?'on':''}"></span>${i+1}. ${esc(p.name)}${p.id===(V.me&&V.me.id)?' (تو)':''}</span>${isHost?`<span><button class="hbtn" onclick="hctl('move',{id:${p.id},dir:-1})">↑</button> <button class="hbtn" onclick="hctl('move',{id:${p.id},dir:1})">↓</button> ${p.id!==(V.me&&V.me.id)?`<button class="hbtn" onclick="hctl('kick',${p.id})">✖</button>`:''}</span>`:''}</div>`).join('')}
+ ${!isHost?'<p class="muted" style="text-align:center">⏳ منتظر شروع بازی توسط میزبان...</p>':''}</div>`;
+ if(isHost){
+  h+=`<div class="card host"><h3>🃏 ترکیب نقش‌ها</h3><p class="muted">${n} بازیکن — انتخاب‌شده: <b style="color:${total===n?'var(--ok)':'var(--acc)'}">${total}</b> | مافیا: ${m}</p>
+  ${ROLE_ORDER.map(r=>`<div class="row"><div><span class="tag ${ROLES[r].side}">${SIDE_NAME[ROLES[r].side]}</span> ${ROLES[r].icon} <b>${ROLES[r].name}</b></div><div class="counter"><button onclick="hctl('role',{r:'${r}',d:-1})">−</button><span>${V.roleCounts[r]||0}</span><button onclick="hctl('role',{r:'${r}',d:1})">+</button></div></div>`).join('')}
+  <button class="btn ghost sm" onclick="hctl('suggest')">✨ پیشنهاد خودکار</button></div>
+  <div class="card host"><h3>⚙️ تنظیمات</h3>
+  <div class="row"><span>زمان صحبت (ثانیه)</span><input type="number" style="width:90px" value="${V.settings.speechTime}" onchange="hctl('setting',{k:'speechTime',v:+this.value||60})"></div>
+  <div class="row"><span>زمان دفاعیه (ثانیه)</span><input type="number" style="width:90px" value="${V.settings.defenseTime}" onchange="hctl('setting',{k:'defenseTime',v:+this.value||45})"></div>
+  <label class="check"><input type="checkbox" ${V.settings.revealExiled?'checked':''} onchange="hctl('setting',{k:'revealExiled',v:this.checked})"> اعلام نقش بازیکنِ خارج‌شده با رأی</label>
+  <label class="check"><input type="checkbox" ${V.settings.deadSeeRoles?'checked':''} onchange="hctl('setting',{k:'deadSeeRoles',v:this.checked})"> بازیکنان خارج‌شده نقش همه را ببینند</label>
+  <button class="btn primary" ${(total!==n||m===0||m>=n-m||n<4)?'disabled':''} onclick="hctl('start')">🎲 پخش نقش‌ها و شروع بازی</button></div>`;
+ }
+ return h;
+}
+/* ---- نمایش نقش ---- */
+function rReveal(){
+ let h='';
+ if(V.me&&V.me.role){const R=ROLES[V.me.role];
+  if(V.me.ready)h=`<div class="card"><div class="huge">✅</div><div class="big">نقشت ثبت شد</div><p class="muted" style="text-align:center">منتظر بقیه... (${V.reveal.ready} از ${V.reveal.total})</p></div>`;
+  else if(!uiHide)h=`<div class="card"><p class="muted" style="text-align:center">🤫 گوشی را فقط خودت ببین</p><button class="btn primary" onclick="uiHide=true;render()">👁 نمایش نقش من</button></div>`;
+  else h=`<div class="card"><div class="rolecard"><div class="huge">${R.icon}</div><h1>${R.name}</h1><span class="tag ${R.side}">${SIDE_NAME[R.side]}</span><p class="muted" style="margin-top:12px">${R.desc}</p></div><button class="btn ok" onclick="act({a:'ready'})">فهمیدم ✅</button></div>`;
+ }else h=`<div class="card"><div class="huge">🃏</div><div class="big">پخش نقش‌ها</div><p class="muted" style="text-align:center">بازیکنان نقش خود را روی گوشی می‌بینند... (${V.reveal.ready} از ${V.reveal.total} آماده)</p></div>`;
+ return h;
+}
+/* ---- شب ---- */
+function mafiaBox(mi){if(!mi)return'';return `<details ${V.night.mode==='mafia'||V.night.mode==='mafiaIntro'?'open':''}><summary class="muted">🕶️ تیم مافیا</summary>${mi.team.map(t=>`<div class="pill"><span>${t.alive?'':'💀 '}${esc(t.name)}${t.id===V.me.id?' (تو)':''}</span><span>${tagR(t.role)}${t.bought?' 💼':''}${t.alive&&V.nightNum>0?` <small>${t.done?'✅ ':''}${t.pick===undefined?'هنوز انتخاب نکرده':t.pick===null?'شلیک نمی‌کند':'هدف: '+esc(t.pickName)}</small>`:''}</span></div>`).join('')}</details>`}
+function rNight(){
+ const N=V.night;const head=`<p class="muted" style="text-align:center">🌙 ${V.nightNum===0?'شب معارفه':'شب '+V.nightNum}</p>`;
+ const wait=(extra='')=>`<div class="card">${head}<div class="huge">🌙</div><div class="big">${!V.me?'شب است...':!V.me.alive?'تو از بازی خارج شده‌ای':N.done?'✅ عملت ثبت شد':'شب است، منتظر بمان'}</div><p class="muted" style="text-align:center">${V.me&&V.me.alive?'تا صبح صبر کن؛ کسی گوشی‌اش را نشان ندهد.':V.me&&!V.me.alive?'ساکت باش و بازی را تماشا کن 🤫':'بازیکنان مشغول اعمال شبانه‌اند...'}</p>${extra}${mafiaBox(N.mafiaInfo)}${V.me&&!V.me.alive&&V.players.some(p=>p.role)?`<h3 style="margin-top:14px">نقش‌ها</h3>${playerList()}`:''}</div>`;
+ const bought=V.me&&V.me.bought&&V.me.side==='mafia'?`<div class="banner">💼 ساول تو را خرید! از این پس عضو تیم مافیا هستی.</div>`:'';
+ const pick=(title,desc,btn,a,skipTxt)=>`<div class="card">${head}${bought}<h2>${title}</h2><p class="muted">${desc}</p>${pbtns(N.targets,false)}<button class="btn ok" ${uiSel.length?'':'disabled'} onclick="act({a:'${a}',id:uiSel[0]})">${btn}</button>${skipTxt?`<button class="btn ghost" onclick="act({a:'${a}',id:null})">${skipTxt}</button>`:''}${mafiaBox(N.mafiaInfo)}</div>`;
+ switch(N.mode){
+  case 'wait':return wait(bought);
+  case 'mafiaIntro':return `<div class="card">${head}<h2>🕶️ معارفه مافیا</h2><p class="muted">هم‌تیمی‌هایت را بشناس:</p>${mafiaBox(N.mafiaInfo)}<button class="btn ok" onclick="act({a:'mafiaOk'})">✅ شناختم</button></div>`;
+  case 'mafia':{const mi=N.mafiaInfo;return `<div class="card">${head}${bought}<h2>🔫 شلیک مافیا</h2><p class="muted">${mi.gfAlive?'انتخاب پدرخوانده نهایی است؛ بقیه پیشنهاد می‌دهند.':'پدرخوانده نیست؛ اکثریت انتخاب می‌کند.'} انتخابت را هم‌تیمی‌ها زنده می‌بینند.</p>
+   <div class="plist">${N.targets.map(p=>`<button class="pbtn ${mi.myPick===p.id?'sel':''}" onclick="act({a:'mafiaPick',id:${p.id}})">${esc(p.name)}</button>`).join('')}</div>
+   <button class="btn primary" ${mi.myPick===undefined||mi.myPick===null?'disabled':''} onclick="act({a:'mafiaSubmit'})">🔫 تأیید شلیک</button><button class="btn ghost" onclick="act({a:'mafiaPick',id:null});act({a:'mafiaSubmit'})">شلیک نمی‌کنم</button>${mafiaBox(mi)}</div>`}
+  case 'matador':return pick('🐂 ماتادور','یک نفر را انتخاب کن تا قابلیتش امشب باطل شود.','✅ تأیید','matador','کسی را انتخاب نمی‌کنم');
+  case 'saul':return pick('💼 ساول گودمن','یک نفر را برای خرید انتخاب کن (فقط شهروند ساده خریده می‌شود؛ وگرنه قابلیت می‌سوزد).','💰 خرید','saul','امشب خرید نمی‌کنم');
+  case 'doctor':return pick('🩺 دکتر واتسون','یک نفر را نجات بده.'+(N.selfUsed?' نجات خودت را قبلاً استفاده کرده‌ای.':' خودت را فقط یک بار می‌توانی نجات دهی.'),'✅ نجات','doctor','کسی را نجات نمی‌دهم');
+  case 'detective':return pick('🔍 کارآگاه','یک نفر را استعلام بگیر.','🔍 استعلام','detective','استعلام نمی‌گیرم');
+  case 'detectiveResult':{const r=N.result;if(uiHide)return wait();return `<div class="card">${head}<h2>🔍 نتیجه استعلام</h2><div class="result-msg">${r.blocked?'⛔ استعلام امشب ناموفق بود (قابلیت تو مسدود شده)':`<b>${esc(r.name)}</b><br>${r.mafia?'<span style="color:var(--acc);font-size:34px">مافیا 🕶️</span>':'<span style="color:var(--ok);font-size:34px">شهروند 👤</span>'}`}</div><button class="btn ok" onclick="uiHide=true;render()">🙈 پنهان کن</button></div>`}
+  case 'leon':return pick('🎯 لئون حرفه‌ای',`گلوله باقی‌مانده: <b>${N.bullets}</b>. اگر به شهروند شلیک کنی خودت می‌میری!`,'🔫 شلیک','leon','امشب شلیک نمی‌کنم');
+  case 'constantine':return pick('✝️ کنستانتین','یک بازیکن خارج‌شده را احیا کن (به عنوان شهروند ساده برمی‌گردد).','✝️ احیا','constantine','امشب احیا نمی‌کنم');
+  case 'nostra':{if(N.count===null)return `<div class="card">${head}<h2>🔮 نوستراداموس</h2><p class="muted">سه نفر را انتخاب کن تا بفهمی چند نفرشان مافیا هستند.</p>${pbtns(N.targets,true,3)}<button class="btn ok" ${uiSel.length===3?'':'disabled'} onclick="act({a:'nostraPick',ids:uiSel})">🔍 استعلام</button></div>`;
+   return `<div class="card">${head}<h2>🔮 نوستراداموس</h2><div class="result-msg">بین <b>${N.picks.map(esc).join('، ')}</b><br>تعداد مافیا: <b style="color:var(--acc);font-size:34px">${N.count}</b></div><p class="muted">پیش‌بینی کن کدام طرف برنده می‌شود (طرف تو همین می‌شود):</p><button class="btn primary" onclick="act({a:'nostraSide',side:'mafia'})">🕶️ مافیا برنده می‌شود</button><button class="btn ok" onclick="act({a:'nostraSide',side:'city'})">🏙️ شهر برنده می‌شود</button></div>`}
+ }
+ return wait();
+}
+/* ---- روز ---- */
+function rDay(){
+ const D=V.day;const meAlive=V.me&&V.me.alive;
+ const tallyHTML=t=>t.map(x=>`<div class="pill"><b>${esc(x.name)}</b><span class="tag ${x.voters.length>=D.threshold?'mafia':'city'}">${x.voters.length} رأی</span>${x.voters.length?`<small>${x.voters.map(esc).join('، ')}</small>`:''}</div>`).join('');
+ switch(D.stage){
+  case 'intro':return `<div class="card"><div class="huge">☀️</div><h2 style="text-align:center">صبح بخیر — روز ${V.dayNum}</h2><div class="result-msg">${V.nightNum===0?'شب معارفه بدون اتفاق گذشت.':(D.deaths.length?`دیشب <b style="color:var(--acc)">${D.deaths.map(esc).join('، ')}</b> از بازی خارج شد${D.deaths.length>1?'ند':''}.`:'شب آرامی بود؛ کسی خارج نشد 🕊️')}${D.events.map(e=>'<br>'+esc(e)).join('')}</div>${V.me&&!V.me.alive?'<div class="banner">تو از بازی خارج شده‌ای — ساکت تماشا کن 🤫</div>':''}<h3>بازیکنان</h3>${playerList()}</div>`;
+  case 'speech':case 'defense':{const isDef=D.stage==='defense';return `<div class="card"><p class="muted" style="text-align:center">${isDef?'🛡 دفاعیه':'🗣 صحبت'} ${D.idx+1} از ${D.total}</p><div class="big">${esc(D.speaker.name)}${D.isMe?' (تو!)':''}</div>${timerHTML(D.timerRem||0)}${D.isMe?`<button class="btn warn" onclick="act({a:'${isDef?'endDefense':'endSpeech'}'})">✅ حرفم تمام شد</button>`:''}</div>`}
+  case 'vote':return `<div class="card"><h2>🗳 رأی‌گیری اول</h2><p class="muted">حدنصاب دفاعیه: <b>${D.threshold}</b> رأی — ${D.votedN} از ${D.aliveN} نفر رأی داده‌اند</p>
+   ${meAlive?(D.myVoted?'<div class="banner" style="border-color:var(--ok);background:rgba(46,196,182,.12)">✅ رأی تو ثبت شد</div>':`<p class="muted">به هر تعداد نفر که مشکوکی رأی بده:</p>${pbtns(D.targets,true)}<button class="btn primary" onclick="act({a:'vote1',ids:uiSel})">${uiSel.length?'ثبت رأی به '+uiSel.length+' نفر':'رأی نمی‌دهم'}</button>`):''}
+   <h3 style="margin-top:12px">شمارش زنده</h3>${tallyHTML(D.tally)}</div>`;
+  case 'finalvote':return `<div class="card"><h2>⚖️ رأی‌گیری نهایی</h2><p class="muted">حداقل <b>${D.threshold}</b> رأی برای خروج — ${D.votedN} از ${D.aliveN} رأی داده‌اند (ممتنع: ${D.abstain})</p>
+   ${meAlive?(D.myVoted?'<div class="banner" style="border-color:var(--ok);background:rgba(46,196,182,.12)">✅ رأی تو ثبت شد</div>':`${pbtns(D.targets,false)}<button class="btn primary" ${uiSel.length?'':'disabled'} onclick="act({a:'vote2',id:uiSel[0]})">🚪 رأی به خروج</button><button class="btn ghost" onclick="act({a:'vote2',id:null})">ممتنع</button>`):''}
+   <h3 style="margin-top:12px">شمارش زنده</h3>${tallyHTML(D.tally)}</div>`;
+  case 'result':return `<div class="card"><div class="huge">${D.resultMsg.includes('خارج شد.')||D.resultMsg.includes('رأی از بازی')?'🚪':'🤝'}</div><div class="result-msg">${esc(D.resultMsg)}</div>${!isHost?'<p class="muted" style="text-align:center">منتظر میزبان برای رفتن به شب...</p>':''}</div>`;
+ }
+}
+/* ---- پایان ---- */
+function rEnd(){
+ const E=V.end;const w=E.winner;
+ return `<div class="card"><div class="huge">${w==='mafia'?'🕶️':'🏙️'}</div><h1 style="text-align:center;color:${w==='mafia'?'var(--mafia)':'var(--city)'}">${w==='mafia'?'مافیا برنده شد!':'شهر برنده شد!'}</h1>${E.nostra?`<p class="result-msg">🔮 نوستراداموس (${esc(E.nostra.name)}) ${E.nostra.won?'هم برنده شد ✅':'برنده نشد ❌'}</p>`:''}</div>
+ <div class="card"><h3>📋 نقش‌ها</h3>${playerList()}</div>
+ <div class="card"><h3>📜 گزارش کامل بازی</h3><div class="log">${E.log.map(l=>`<div>${esc(l)}</div>`).join('')}</div></div>`;
+}
+/* ---- پنل میزبان ---- */
+function rHostPanel(){
+ const H=V.hostInfo||{};let b='';
+ if(V.phase==='reveal')b=`<button class="btn ghost sm" onclick="hctl('forceReveal')">⏭ شروع شب بدون منتظر ماندن</button>`;
+ else if(V.phase==='night')b=`<p class="muted">${H.pending} عمل شبانه باقی مانده</p><button class="btn ghost sm" onclick="if(confirm('اعمال باقی‌مانده «انجام نشده» حساب می‌شود. ادامه؟'))hctl('forceNight')">⏭ جلو بردن شب (بازیکن قطع‌شده)</button>`;
+ else if(V.phase==='day'){const s=V.day.stage;
+  if(s==='intro')b=`<button class="btn primary" onclick="hctl('continue')">▶ شروع صحبت‌ها</button>`;
+  else if(s==='speech')b=`<button class="btn ghost sm" onclick="hctl('nextSpeech')">نفر بعدی ←</button><button class="btn ghost sm" onclick="hctl('skipToVote')">⏭ رفتن به رأی‌گیری</button>`;
+  else if(s==='vote')b=`<button class="btn ghost sm" onclick="hctl('endVote1')">⏹ پایان رأی‌گیری (${H.voted}/${H.aliveN})</button>`;
+  else if(s==='defense')b=`<button class="btn ghost sm" onclick="hctl('nextDefense')">نفر بعدی ←</button>`;
+  else if(s==='finalvote')b=`<button class="btn ghost sm" onclick="hctl('endVote2')">⏹ اعلام نتیجه (${H.voted}/${H.aliveN})</button>`;
+  else if(s==='result')b=`<button class="btn primary" onclick="hctl('continue')">🌙 رفتن به شب</button>`;
+ }else if(V.phase==='end')b=`<button class="btn primary" onclick="hctl('newGame')">🎲 بازی جدید با همین بازیکنان</button>`;
+ if(!b)return'';return `<div class="card host"><h3>🎛 کنترل میزبان</h3>${b}</div>`;
+}
+function showHelp(){$('modal').innerHTML=`<div class="overlay" onclick="if(event.target===this)this.remove()"><div class="card"><h2>📖 راهنمای نقش‌ها</h2>${ROLE_ORDER.map(r=>`<div style="margin-bottom:12px"><span class="tag ${ROLES[r].side}">${SIDE_NAME[ROLES[r].side]}</span> <b>${ROLES[r].icon} ${ROLES[r].name}</b><div class="muted">${ROLES[r].desc}</div></div>`).join('')}
+<h3>روند</h3><p class="muted">هر شب همه هم‌زمان روی گوشی خودشان عمل می‌کنند (اول ماتادور، بعد بقیه). روزها: اعلام نتیجه، صحبت نوبتی با تایمر، رأی اول (چند نفره)، دفاعیه، رأی نهایی. برد مافیا: تعداد مافیا ≥ شهروندان؛ برد شهر: حذف همه مافیا.</p><button class="btn ok" onclick="document.getElementById('modal').innerHTML=''">بستن</button></div></div>`}
+
+/* ================= شروع ================= */
+(function init(){
+ if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
+ const param=new URLSearchParams(location.search).get('room');
+ let saved=null;try{saved=JSON.parse(localStorage.getItem('mafia_cli'))}catch(e){}
+ if(param&&saved&&saved.room===param.toUpperCase()&&saved.token){ME=saved;render();connectAsClient();return}
+ render();
+})();
+</script>
+</body>
+</html>
